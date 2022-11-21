@@ -30,6 +30,11 @@ const pool  = mysql.createPool({
     database : 'qod',
     insecureAuth : true
 });
+console.log("HOST:: ",process.env.DB_HOST);
+console.log("HOST:: ",process.env.DB_USER);
+console.log("HOST:: ",process.env.DB_PASS);
+
+
 
 var getConnection = function(res,callback) {
     logMsg('getting connection from pool');
@@ -42,6 +47,9 @@ var getConnection = function(res,callback) {
         callback(connection);
     });
 };
+
+// api routes
+app.use('/users', require('./users/users.controller'));
 
 // function between(min, max) {  
 //     return Math.floor(
@@ -95,9 +103,6 @@ app.get('/version',
 	}
 );
 
-// api routes
-//app.use('/users', require('./users/users.controller'));
-app.use('/users', require('./users/users.controller'));
 
 // use package to derive meta data
 const package = require('./package.json');

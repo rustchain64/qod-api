@@ -23,6 +23,10 @@ async function create(params) {
         throw 'Email "' + params.email + '" is already registered';
     }
 
+    // if (await db.User.findOne({ where: { username: params.username } })) {
+    //   throw 'Username "' + params.email + '" is already registered';
+    // }
+
     const user = new db.User(params);
     
     // hash password
