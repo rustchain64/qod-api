@@ -17,7 +17,20 @@ function logErr( err) {
 app.use(express.urlencoded({ extended: true }));
 app.use(express.json());
 
-app.enable('trust proxy'); 
+app.enable('trust proxy');
+
+// for parsing the body in POST request
+var bodyParser = require('body-parser');
+
+var users =[{
+    id: 1,
+    name: "John Doe",
+    age : 23,
+    email: "john@doe.com"
+}];
+
+app.use(bodyParser.urlencoded({ extended: false }));
+app.use(bodyParser.json());
 
 function getRandomInt(max) {
 	return Math.floor(Math.random() * Math.floor(max));
@@ -57,6 +70,8 @@ var getConnection = function(res,callback) {
 //     )
 // }
 
+
+
 function dailyQuoteId(){
     // assumes the order of the database is random, and day of year is same as quote id.
     var now = new Date();
@@ -81,6 +96,30 @@ app.get('/daily',
                         res.json( { "quote": rows[0].quote, "id": rows[0].quote_id, "author": rows[0].author, "genre": rows[0].genre } );	
                     } else {
                         res.status(500).json({"error": "quote id " + quote_id + " doesn't exist." });
+                    }
+                    connection.release();
+                }
+            });
+		});
+	}
+);
+
+app.get('/users', 	
+	function(req, res) {
+        logMsg('request: /pie_users');
+		getConnection(res, function(connection){
+            var id = dailyQuoteId();
+            var sql = "SELECT * FROM pie_users;"
+            //var sql = "SELECT quotes.quote_id, quotes.quote, authors.author, genres.genre FROM quotes, authors, genres WHERE quote_id=? and quotes.author_id=authors.author_id and quotes.genre_id=genres.genre_id ;";
+            //connection.query(sql, [quote_id], function (err, rows, fields) {
+            connection.query(sql, [id], function (err, rows, fields) {
+                if( err ) {
+                    res.status(500).json({"error": err });
+                } else {
+                    if( rows.length > 0 ) {
+                        res.json( { "user": rows[0].user, "id": rows[0].id, "firstName": rows[0].firstName, "firstName": rows[0].firstName } );	
+                    } else {
+                        res.status(500).json({"error": "user id " + id + " doesn't exist." });
                     }
                     connection.release();
                 }
