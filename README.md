@@ -10,3 +10,6 @@ Required environment variables that are required to connect to the database tier
 - **DB_HOST** - the hostname or IP address of the database instance, assuming use of port 3306 (In case of OpenShift, use service name of the qod-db deployment)
 - **DB_USER** - the username of a user with access to the database (qod-db deployment uses `user`)
 - **DB_PASS** - the password for the user above (qod-db deployment uses `pass`)
+
+### Verify ### Environment Varaiables with api deployment and secret
+Might me luke / secret
