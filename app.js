@@ -31,8 +31,8 @@ const pool  = mysql.createPool({
     insecureAuth : true
 });
 console.log("HOST:: ",process.env.DB_HOST);
-console.log("HOST:: ",process.env.DB_USER);
-console.log("HOST:: ",process.env.DB_PASS);
+console.log("DB_USER:: ",process.env.DB_USER);
+console.log("DB_PASS:: ",process.env.DB_PASS);
 
 
 
@@ -49,7 +49,7 @@ var getConnection = function(res,callback) {
 };
 
 // api routes
-app.use('/users', require('./users/users.controller'));
+//app.use('/users', require('./users/users.controller'));
 
 // function between(min, max) {  
 //     return Math.floor(
