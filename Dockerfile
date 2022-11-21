@@ -4,11 +4,11 @@ ENV APP_ROOT=/opt/app-root
 
 WORKDIR $APP_ROOT
 
-COPY app.js .
+COPY server.js .
 COPY package.json .
 
 RUN npm install
 
 EXPOSE 8080
 
-CMD ["node", "app.js"]
+CMD ["node", "server.js"]
