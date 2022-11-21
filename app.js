@@ -1,5 +1,6 @@
 const express = require('express');
 const mysql = require('mysql');
+const mysql2 = require('mysql2');
 
 var app = express();
 app.set('port',process.env.PORT || 8080)
@@ -80,111 +81,6 @@ app.get('/daily',
 	}
 );
 
-app.get('/quotes/:id', function(req,res) {
-	var quote_id=req.params.id;
-    logMsg('request: /quotes/'+quote_id);
-	getConnection(res, function(connection){
-        var sql = "SELECT quotes.quote_id, quotes.quote, authors.author, genres.genre FROM quotes, authors, genres WHERE quote_id=? and quotes.author_id=authors.author_id and quotes.genre_id=genres.genre_id ;";
-        logMsg('query sql: '+sql);
-		connection.query(sql, [quote_id], function (error, rows, fields) {
-            logMsg('sql query completed');
-			if( error ) {
-                logErr(error);
-				res.status(500).json({"error": err });
-			} else {
-				if( rows.length > 0 ) {
-                    logMsg('sql query completed, rows: '+rows.length);
-					res.json( { "quote": rows[0].quote, "id": rows[0].quote_id, "author": rows[0].author, "genre": rows[0].genre } );	
-				} else {
-                    logErr('quote id ['+quote_id+'] not found');
-					res.status(404).json({"error": "quote id '"+ quote_id + "' doesn't exist." });
-                }
-                logMsg('connection releasing');
-				connection.release();
-			}
-		});
-	});
-});
-
-app.get('/random',  
-	function(req, res) {
-        logMsg('request: /random');
-		getConnection(res,function(connection){
-            var sql = "SELECT COUNT(*) AS quote_count FROM quotes";
-            logMsg('query sql: ' + sql)
-            connection.query(sql, function (error, results, fields) {
-                if( error ) {
-                    logErr(error);
-                    res.status(500).json({"error": error });
-                } else {
-                    var count = results[0].quote_count;
-                    var quote_id = getRandomInt(count);
-                    var sql = "SELECT quotes.quote_id, quotes.quote, authors.author, genres.genre FROM quotes, authors, genres WHERE quote_id=? and quotes.author_id=authors.author_id and quotes.genre_id=genres.genre_id ;";
-                    logMsg('query sql: ' + sql + ', count: ' + count + ' quote_id: ' + quote_id );
-                    connection.query(sql, [quote_id], function (error, rows, fields) {
-                        if( error ) {
-                            logErr(error);
-                            res.status(500).json({"error": error });
-                        } else {
-                            logMsg('Randome quote from ' + rows[0].author );
-                            res.json( { "quote": rows[0].quote, "id": rows[0].quote_id, "author": rows[0].author, "genre": rows[0].genre } );	
-                        }
-                        logMsg('connection releasing');
-                        connection.release();
-                    });
-                }
-            });
-		});
-	}
-);
-
-app.get('/genres',  
-	function(req, res) {
-        logMsg('request: /genres');
-		getConnection(res,function(connection){
-            var sql = "SELECT genres.genre_id, genres.genre FROM qod.genres";
-            logMsg('query sql: ' + sql)
-            connection.query(sql, function (error, rows, fields) {
-                if( error ) {
-                    logErr(error);
-                    res.status(500).json({"error": error });
-                } else {
-                    logMsg('genre rows returns: '+rows.length);
-                    res.json( rows );	
-                }
-                logMsg('connection releasing');
-                connection.release();
-            });
-		});
-	}
-);
-
-app.get('/genres/:id', function(req,res) {
-    var genre_id=req.params.id;
-    logMsg('request: /genres/'+genre_id);
-	getConnection(res,function(connection){
-        var sql = "SELECT genres.genre_id, genres.genre FROM genres WHERE genres.genre_id=?;";
-        logMsg('query sql: ' + sql);
-		connection.query(sql, [genre_id], function (error, rows, fields) {
-			if( error ) {
-                logErr(error);
-				res.status(500).json({"error": err });
-			} else {
-                logMsg('sql query completed, rows: '+rows.length);
-				if( rows.length > 0 ) {
-					res.json( { "genre_id": rows[0].genre_id, "genre": rows[0].genre } );	
-				} else {
-                    var erObj = {"error": "genre id '"+ genre_id + "' doesn't exist." };
-                    logErr(erObj);
-					res.status(404).json(erObj);
-				}
-            }
-            logMsg('connection releasing');
-            connection.release();
-		});
-	});
-});
-
 app.get('/',  
 	function(req, res) {
         logMsg('root requested, redirecting to version');
@@ -201,7 +97,7 @@ app.get('/version',
 
 // api routes
 //app.use('/users', require('./users/users.controller'));
-app.use('/users', require('./users/users.controller'));
+//app.use('/users', require('./users/users.controller'));
 
 // use package to derive meta data
 const package = require('./package.json');
