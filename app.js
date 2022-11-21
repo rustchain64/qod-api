@@ -128,6 +128,30 @@ app.get('/users',
 	}
 );
 
+app.get('/referrals', 	
+	function(req, res) {
+        logMsg('request: /referrals');
+		getConnection(res, function(connection){
+            var id = dailyQuoteId();
+            var sql = "SELECT * FROM referrals;"
+            //var sql = "SELECT quotes.quote_id, quotes.quote, authors.author, genres.genre FROM quotes, authors, genres WHERE quote_id=? and quotes.author_id=authors.author_id and quotes.genre_id=genres.genre_id ;";
+            //connection.query(sql, [quote_id], function (err, rows, fields) {
+            connection.query(sql, [id], function (err, rows, fields) {
+                if( err ) {
+                    res.status(500).json({"error": err });
+                } else {
+                    if( rows.length > 0 ) {
+                        res.json( { "referral": rows[0].user, "id": rows[0].id, "yourName": rows[0].yourName, "referralName": rows[0].referralName, "agentName": rows[0].agentName, "agentCode": rows[0].agentCode, "businessName": rows[0].businessName, "phone": rows[0].phone, "email": rows[0].email, "ss": rows[0].ss, "bankName": rows[0].bankName, "routingNumber": rows[0].routingNumber, "accountNumber": rows[0].accountNumber, "title": rows[0].title, "description": rows[0].description, "published": rows[0].published } );	
+                    } else {
+                        res.status(500).json({"error": "referral id " + id + " doesn't exist." });
+                    }
+                    connection.release();
+                }
+            });
+		});
+	}
+);
+
 app.get('/',  
 	function(req, res) {
         logMsg('root requested, redirecting to version');

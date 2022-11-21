@@ -52,3 +52,37 @@ VALUES
 
     ###############################################################
 SELECT * FROM pie_users;
+
+********************************************************************************************
+
+ INSERT INTO referrals (id, yourName, referralName, agentName, agentCode, businessName, phone, email, ss, bankName, routingNumber, accountNumber, title, description, published)
+
+CREATE TABLE `referrals`
+(
+  `id`            INT(11) NOT NULL auto_increment,
+  `yourName`      VARCHAR(255) NOT NULL ,
+  `referralName`  VARCHAR(255) NOT NULL ,
+  `agentName`      VARCHAR(255) NOT NULL ,
+  `agentCode`      VARCHAR(255) NOT NULL ,
+  `businessName`   VARCHAR(255) NOT NULL ,
+  `phone`          VARCHAR(255) NOT NULL ,
+  `email`          VARCHAR(255) NOT NULL ,
+  `ss`             VARCHAR(255) NOT NULL ,
+  `bankName`       VARCHAR(255) NOT NULL ,
+  `routingNumber`  VARCHAR(255) NOT NULL ,
+  `accountNumber`  VARCHAR(255) NOT NULL ,
+  `title`          VARCHAR(255) NOT NULL ,
+  `description`    VARCHAR(255) NOT NULL ,
+  `published`      BOOLEAN, 
+  `created_at`    DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP ,
+  `updated_at`    DATETIME on UPDATE CURRENT_TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP ,
+  PRIMARY KEY (`id`),
+  UNIQUE `idx_name_unique` (`accountNumber`(255))
+);
+
+ INSERT INTO referrals (id,yourName,referralName,agentName,agentCode,businessName,phone,email,ss,bankName,routingNumber,accountNumber,title,description,published)
+ VALUES
+ (1, 'Wesley Parr', 'James Conn', 'James Bond', 'tempCode', 'ACME GUN SUPPLY', '9997775555', 'conn@gmail.com', '444556666', 'Wells Fargo', '123000876', '1111222233334444', 'Western Flicks', 'Gun Slingers', false),
+ (2, 'Wesley Parr', 'Brendon Frazier', 'James Bond', 'tempCode', 'ACME MUMMY SUPPLY', '9997775555', 'bfrazier@gmail.com', '444556666', 'Wells Fargo', '123000876', '5555222233334444', 'Adventure Movies', 'Adventure Guy', false);
+
+ **********************************************************************************************************
