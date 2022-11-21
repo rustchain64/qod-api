@@ -97,7 +97,7 @@ app.get('/version',
 
 // api routes
 //app.use('/users', require('./users/users.controller'));
-//app.use('/users', require('./users/users.controller'));
+app.use('/users', require('./users/users.controller'));
 
 // use package to derive meta data
 const package = require('./package.json');
