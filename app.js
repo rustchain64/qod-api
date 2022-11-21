@@ -117,7 +117,7 @@ app.get('/users',
                     res.status(500).json({"error": err });
                 } else {
                     if( rows.length > 0 ) {
-                        res.json( { "user": rows[0].user, "id": rows[0].id, "firstName": rows[0].firstName, "firstName": rows[0].firstName } );	
+                        res.json( { "user": rows[0].user, "id": rows[0].id, "persona": rows[0].persona, "agentCode": rows[0].agentCode, "username": rows[0].agentName, "hash": rows[0].hash, "firstName": rows[0].firstName, "lastName": rows[0].lastName } );	
                     } else {
                         res.status(500).json({"error": "user id " + id + " doesn't exist." });
                     }
