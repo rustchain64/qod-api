@@ -114,7 +114,7 @@ app.get('/users',
                     res.status(500).json({"error": err });
                 } else {
                     if( rows.length > 0 ) {
-                        res.json( rows )
+                        res.json( rows );
                         //res.json( { "user": rows[0].user, "id": rows[0].id, "persona": rows[0].persona, "agentCode": rows[0].agentCode, "username": rows[0].agentName, "hash": rows[0].hash, "firstName": rows[0].firstName, "lastName": rows[0].lastName } );	
                     } else {
                         res.status(500).json({"error": "user id " + id + " doesn't exist." });
@@ -224,7 +224,8 @@ app.get('/referrals',
                     res.status(500).json({"error": err });
                 } else {
                     if( rows.length > 0 ) {
-                        res.json( { "referral": rows[0].user, "id": rows[0].id, "yourName": rows[0].yourName, "referralName": rows[0].referralName, "agentName": rows[0].agentName, "agentCode": rows[0].agentCode, "businessName": rows[0].businessName, "phone": rows[0].phone, "email": rows[0].email, "ss": rows[0].ss, "bankName": rows[0].bankName, "routingNumber": rows[0].routingNumber, "accountNumber": rows[0].accountNumber, "title": rows[0].title, "description": rows[0].description, "published": rows[0].published } );	
+                      res.json ( rows );  
+                      //res.json( { "referral": rows[0].user, "id": rows[0].id, "yourName": rows[0].yourName, "referralName": rows[0].referralName, "agentName": rows[0].agentName, "agentCode": rows[0].agentCode, "businessName": rows[0].businessName, "phone": rows[0].phone, "email": rows[0].email, "ss": rows[0].ss, "bankName": rows[0].bankName, "routingNumber": rows[0].routingNumber, "accountNumber": rows[0].accountNumber, "title": rows[0].title, "description": rows[0].description, "published": rows[0].published } );	
                     } else {
                         res.status(500).json({"error": "referral id " + id + " doesn't exist." });
                     }
