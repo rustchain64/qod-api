@@ -128,6 +128,91 @@ app.get('/users',
 	}
 );
 
+// GET A USER BY ID IN ORDER TO LOGIN
+app.get('/users/:id', function(req,res) {
+	var user_id=req.params.id;
+    logMsg('request: /users/'+user_id);
+	getConnection(res, function(connection){
+        var sql = "SELECT users.user_id, users.firstName, users.lastName, users.username FROM pie_users";
+        logMsg('query sql: '+sql);
+		connection.query(sql, [user_id], function (error, rows, fields) {
+            logMsg('sql query completed');
+            console.log('sql query completed',fields);
+			if( error ) {
+                logErr(error);
+				res.status(500).json({"error": err });
+			} else {
+				if( rows.length > 0 ) {
+                    logMsg('sql query completed, rows: '+rows.length);
+					res.json( { "referral": rows[0].referral, "id": rows[0].user_id, "id": rows[0].firstName, "id": rows[0].lastName } );	
+				} else {
+                    logErr('user_id ['+user_id+'] not found');
+					res.status(404).json({"error": "quote id '"+ user_id + "' doesn't exist." });
+                }
+                logMsg('connection releasing');
+				connection.release();
+			}
+		});
+	});
+});
+
+// CREATE a pie_user
+app.post('/users/', function(req,res) {
+	var referral_id=req.params.id;
+    logMsg('request: /pie_users/'+referral_id);
+	getConnection(res, function(connection){
+        var sql = "SELECT quotes.quote_id, quotes.quote, authors.author, genres.genre FROM quotes, authors, genres WHERE quote_id=? and quotes.author_id=authors.author_id and quotes.genre_id=genres.genre_id ;";
+        logMsg('query sql: '+sql);
+		connection.query(sql, [quote_id], function (error, rows, fields) {
+            logMsg('sql query completed');
+			if( error ) {
+                logErr(error);
+				res.status(500).json({"error": err });
+			} else {
+				if( rows.length > 0 ) {
+                    logMsg('sql query completed, rows: '+rows.length);
+					res.json( { "quote": rows[0].quote, "id": rows[0].quote_id, "author": rows[0].author, "genre": rows[0].genre } );	
+				} else {
+                    logErr('quote id ['+quote_id+'] not found');
+					res.status(404).json({"error": "quote id '"+ quote_id + "' doesn't exist." });
+                }
+                logMsg('connection releasing');
+				connection.release();
+			}
+		});
+	});
+});
+
+// UPDATE a user
+app.put('/user_id/:id', function(req,res) {
+	var user_id=req.params.id;
+    logMsg('request: /pie_users/'+user_id);
+	getConnection(res, function(connection){
+        var sql = "UPDATE table_name SET column1 = value1, column2 = value2 WHERE id=100"
+        var sql = "SELECT quotes.quote_id, quotes.quote, authors.author, genres.genre FROM quotes, authors, genres WHERE quote_id=? and quotes.author_id=authors.author_id and quotes.genre_id=genres.genre_id ;";
+       // logMsg('query sql: '+sql);
+		connection.query(sql, [quote_id], function (error, rows, fields) {
+            logMsg('sql query completed');
+			if( error ) {
+                logErr(error);
+				res.status(500).json({"error": err });
+			} else {
+				if( rows.length > 0 ) {
+                    logMsg('sql query completed, rows: '+rows.length);
+					res.json( { "quote": rows[0].quote, "id": rows[0].quote_id, "author": rows[0].author, "genre": rows[0].genre } );	
+				} else {
+                    logErr('quote id ['+quote_id+'] not found');
+					res.status(404).json({"error": "quote id '"+ quote_id + "' doesn't exist." });
+                }
+                logMsg('connection releasing');
+				connection.release();
+			}
+		});
+	});
+});
+
+//##############################################################3
+
 app.get('/referrals', 	
 	function(req, res) {
         logMsg('request: /referrals');
@@ -151,6 +236,88 @@ app.get('/referrals',
 		});
 	}
 );
+
+// GET A REFERRAL BY ID
+app.get('/referrals/:id', function(req,res) {
+	var referral_id=req.params.id;
+    logMsg('request: /referrals/'+referral_id);
+    console.log("referral_id ", referral_id);
+	getConnection(res, function(connection){
+        var sql = "SELECT referrals.referral_id, referral_id.firstName FROM referrals WHERE referral_id=? and referral_id.author_id=authors.author_id and referral_id.genre_id=genres.genre_id ;";
+        logMsg('query sql: '+sql);
+		connection.query(sql, [quote_id], function (error, rows, fields) {
+            logMsg('sql query completed');
+			if( error ) {
+                logErr(error);
+				res.status(500).json({"error": err });
+			} else {
+				if( rows.length > 0 ) {
+                    logMsg('sql query completed, rows: '+rows.length);
+					res.json( { "quote": rows[0].quote, "id": rows[0].referral_id, "author": rows[0].author, "genre": rows[0].genre } );	
+				} else {
+                    logErr('referral_id ['+referral_id+'] not found');
+					res.status(404).json({"error": "quote id '"+ referral_id + "' doesn't exist." });
+                }
+                logMsg('connection releasing');
+				connection.release();
+			}
+		});
+	});
+});
+
+// CREATE a referral
+app.post('/referrals/', function(req,res) {
+	var referral_id=req.params.id;
+    logMsg('request: /referrals/'+referral_id);
+	getConnection(res, function(connection){
+        var sql = "SELECT quotes.quote_id, quotes.quote, authors.author, genres.genre FROM quotes, authors, genres WHERE quote_id=? and quotes.author_id=authors.author_id and quotes.genre_id=genres.genre_id ;";
+        logMsg('query sql: '+sql);
+		connection.query(sql, [quote_id], function (error, rows, fields) {
+            logMsg('sql query completed');
+			if( error ) {
+                logErr(error);
+				res.status(500).json({"error": err });
+			} else {
+				if( rows.length > 0 ) {
+                    logMsg('sql query completed, rows: '+rows.length);
+					res.json( { "quote": rows[0].quote, "id": rows[0].quote_id, "author": rows[0].author, "genre": rows[0].genre } );	
+				} else {
+                    logErr('quote id ['+quote_id+'] not found');
+					res.status(404).json({"error": "quote id '"+ quote_id + "' doesn't exist." });
+                }
+                logMsg('connection releasing');
+				connection.release();
+			}
+		});
+	});
+});
+
+// UPDATE a referral
+app.put('/referrals/:id', function(req,res) {
+	var referral_id=req.params.id;
+    logMsg('request: /referrals/'+referral_id);
+	getConnection(res, function(connection){
+        var sql = "SELECT quotes.quote_id, quotes.quote, authors.author, genres.genre FROM quotes, authors, genres WHERE quote_id=? and quotes.author_id=authors.author_id and quotes.genre_id=genres.genre_id ;";
+        logMsg('query sql: '+sql);
+		connection.query(sql, [quote_id], function (error, rows, fields) {
+            logMsg('sql query completed');
+			if( error ) {
+                logErr(error);
+				res.status(500).json({"error": err });
+			} else {
+				if( rows.length > 0 ) {
+                    logMsg('sql query completed, rows: '+rows.length);
+					res.json( { "quote": rows[0].quote, "id": rows[0].quote_id, "author": rows[0].author, "genre": rows[0].genre } );	
+				} else {
+                    logErr('quote id ['+quote_id+'] not found');
+					res.status(404).json({"error": "quote id '"+ quote_id + "' doesn't exist." });
+                }
+                logMsg('connection releasing');
+				connection.release();
+			}
+		});
+	});
+});
 
 app.get('/',  
 	function(req, res) {
@@ -177,9 +344,3 @@ console.log(`Starting ${appName} v${appVersion}.`);
 app.listen(app.get('port'), '0.0.0.0', function() {
 	  console.log("Now serving referrals on port " + app.get('port'));
 });
-
-
-
-
-
-	

@@ -86,3 +86,29 @@ CREATE TABLE `referrals`
  (2, 'Wesley Parr', 'Brendon Frazier', 'James Bond', 'tempCode', 'ACME MUMMY SUPPLY', '9997775555', 'bfrazier@gmail.com', '444556666', 'Wells Fargo', '123000876', '5555222233334444', 'Adventure Movies', 'Adventure Guy', false);
 
  **********************************************************************************************************
+
+ app.get('/quotes/:id', function(req,res) {
+	var quote_id=req.params.id;
+    logMsg('request: /quotes/'+quote_id);
+	getConnection(res, function(connection){
+        var sql = "SELECT quotes.quote_id, quotes.quote, authors.author, genres.genre FROM quotes, authors, genres WHERE quote_id=? and quotes.author_id=authors.author_id and quotes.genre_id=genres.genre_id ;";
+        logMsg('query sql: '+sql);
+		connection.query(sql, [quote_id], function (error, rows, fields) {
+            logMsg('sql query completed');
+			if( error ) {
+                logErr(error);
+				res.status(500).json({"error": err });
+			} else {
+				if( rows.length > 0 ) {
+                    logMsg('sql query completed, rows: '+rows.length);
+					res.json( { "quote": rows[0].quote, "id": rows[0].quote_id, "author": rows[0].author, "genre": rows[0].genre } );	
+				} else {
+                    logErr('quote id ['+quote_id+'] not found');
+					res.status(404).json({"error": "quote id '"+ quote_id + "' doesn't exist." });
+                }
+                logMsg('connection releasing');
+				connection.release();
+			}
+		});
+	});
+});
