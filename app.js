@@ -20,21 +20,21 @@ app.use(express.json());
 app.enable('trust proxy');
 
 // for parsing the body in POST request
-var bodyParser = require('body-parser');
+// var bodyParser = require('body-parser');
 
-var users =[{
-    id: 1,
-    name: "John Doe",
-    age : 23,
-    email: "john@doe.com"
-}];
+// var users =[{
+//     id: 1,
+//     name: "John Doe",
+//     age : 23,
+//     email: "john@doe.com"
+// }];
 
-app.use(bodyParser.urlencoded({ extended: false }));
-app.use(bodyParser.json());
+// app.use(bodyParser.urlencoded({ extended: false }));
+// app.use(bodyParser.json());
 
-function getRandomInt(max) {
-	return Math.floor(Math.random() * Math.floor(max));
-}
+// function getRandomInt(max) {
+// 	return Math.floor(Math.random() * Math.floor(max));
+// }
 
 const pool  = mysql.createPool({
 	host     : process.env.DB_HOST,
@@ -103,21 +103,19 @@ app.get('/daily',
 		});
 	}
 );
-
+// GETS ALL USERS
 app.get('/users', 	
 	function(req, res) {
         logMsg('request: /pie_users');
 		getConnection(res, function(connection){
-            var id = dailyQuoteId();
             var sql = "SELECT * FROM pie_users;"
-            //var sql = "SELECT quotes.quote_id, quotes.quote, authors.author, genres.genre FROM quotes, authors, genres WHERE quote_id=? and quotes.author_id=authors.author_id and quotes.genre_id=genres.genre_id ;";
-            //connection.query(sql, [quote_id], function (err, rows, fields) {
             connection.query(sql, [id], function (err, rows, fields) {
                 if( err ) {
                     res.status(500).json({"error": err });
                 } else {
                     if( rows.length > 0 ) {
-                        res.json( { "user": rows[0].user, "id": rows[0].id, "persona": rows[0].persona, "agentCode": rows[0].agentCode, "username": rows[0].agentName, "hash": rows[0].hash, "firstName": rows[0].firstName, "lastName": rows[0].lastName } );	
+                        res.json( rows )
+                        //res.json( { "user": rows[0].user, "id": rows[0].id, "persona": rows[0].persona, "agentCode": rows[0].agentCode, "username": rows[0].agentName, "hash": rows[0].hash, "firstName": rows[0].firstName, "lastName": rows[0].lastName } );	
                     } else {
                         res.status(500).json({"error": "user id " + id + " doesn't exist." });
                     }
